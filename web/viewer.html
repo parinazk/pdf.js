@@ -31,6 +31,41 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--#endif-->
     <title>PDF.js viewer</title>
+    <script src="../../Jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			var pdfjsPrintAccessible= false;
+
+			function setPdfjsPrintAccessible(printAccessible) {
+				pdfjsPrintAccessible = printAccessible;
+				if (!printAccessible) {
+					$(document).find('#print').remove();
+					$(document).find('#secondaryPrint').remove();
+        }
+        else{
+				$(document).find('#print').show();
+				$(document).find('#secondaryPrint').show();
+				}
+			}
+			function HandleMessage(e) {
+				var data = $.parseJSON(e.data);
+				switch (data.command) {
+					case 'pdfPrintAccessible':
+						setPdfjsPrintAccessible(data.data);
+						break;
+				}
+			}
+
+			$(document).ready(function () {
+      $(document).find('#print').hide();
+      $(document).find('#secondaryPrint').hide();
+			$(document).find('#openFile').remove();
+      $(document).find('#download').remove();
+      $(document).find('#secondaryOpenFile').remove();
+      $(document).find('#secondaryDownload').remove();
+      $(document).find('#viewBookmark').remove();
+      window.addEventListener('message', HandleMessage, false);
+			});
+		</script>
 
 <!--#if FIREFOX || MOZCENTRAL-->
 <!--#include viewer-snippet-firefox-extension.html-->
